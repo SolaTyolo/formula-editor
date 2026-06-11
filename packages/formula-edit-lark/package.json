@@ -14,12 +14,12 @@
   "author": "formula-edit-lark contributors",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/formula-edit-lark/formula-edit-lark.git"
+    "url": "git+https://github.com/SolaTyolo/formula-editor.git"
   },
   "bugs": {
-    "url": "https://github.com/formula-edit-lark/formula-edit-lark/issues"
+    "url": "https://github.com/SolaTyolo/formula-editor/issues"
   },
-  "homepage": "https://github.com/formula-edit-lark/formula-edit-lark#readme",
+  "homepage": "https://github.com/SolaTyolo/formula-editor#readme",
   "publishConfig": {
     "access": "public"
   },
