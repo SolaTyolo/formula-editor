@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "installCommand": "npm ci --include=dev --include=optional",
-  "buildCommand": "npm run build:vercel",
+  "buildCommand": "npm run build -w formula-edit-lark-example",
   "outputDirectory": "example/dist"
 }

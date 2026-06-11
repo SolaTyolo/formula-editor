@@ -31,6 +31,29 @@ header a {
   color: #1456f0;
 }
 
+.controls {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.controls label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: #646a73;
+}
+
+.controls select {
+  padding: 6px 10px;
+  border: 1px solid #e5e6eb;
+  border-radius: 6px;
+  font-size: 13px;
+  min-width: 220px;
+}
+
 .layout {
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
@@ -90,12 +113,90 @@ th {
   color: #8f959e;
 }
 
-.preview-panel {
+.preview-panel,
+.data-table-panel {
   margin-top: 16px;
 }
 
-td.error {
+.sub-table-title {
+  margin: 16px 0 8px;
+  font-size: 14px;
+  color: #646a73;
+}
+
+.sub-table-title:first-child {
+  margin-top: 0;
+}
+
+.table-source-list__items {
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.table-source-list__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid #e5e6eb;
+  border-radius: 6px;
+  background: #f7f8fa;
+  font-size: 13px;
+}
+
+.table-source-list__item--current {
+  border-color: #1456f0;
+  background: #e8f0ff;
+}
+
+.table-source-list__name {
+  font-weight: 500;
+  color: #1f2329;
+}
+
+.table-source-list__badge {
+  flex-shrink: 0;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #1456f0;
+  color: #fff;
+  font-size: 11px;
+}
+
+.table-source-section + .table-source-section {
+  margin-top: 8px;
+}
+
+.linked-table-block + .linked-table-block {
+  margin-top: 12px;
+}
+
+.linked-table-block__title {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1f2329;
+}
+
+.formula-cell-table__formula-cell {
+  cursor: default;
+  background: #f0f7ff;
+  color: #1456f0;
+  font-weight: 500;
+}
+
+.formula-cell-table__formula-cell:hover {
+  background: #e8f0ff;
+}
+
+.formula-cell-table__formula-cell--error {
   color: #d83931;
+  background: #fff1f0;
 }
 
 @media (max-width: 900px) {

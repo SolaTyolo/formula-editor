@@ -9,7 +9,12 @@
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
-    "strict": true
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "formula-edit-lark": ["../packages/formula-edit-lark/src/index.ts"],
+      "formula-edit-lark/*": ["../packages/formula-edit-lark/src/*"]
+    }
   },
   "include": ["src"]
 }

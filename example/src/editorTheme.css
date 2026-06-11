@@ -1,0 +1,17 @@
+/* Same tokens as EDIT_THEME — used where theme prop is not available (e.g. hover popup) */
+.fel-example-theme {
+  --fel-primary: #6366f1;
+  --fel-primary-hover: #4f46e5;
+  --fel-border: #c7d2fe;
+  --fel-bg: #ffffff;
+  --fel-text: #1e1b4b;
+  --fel-muted: #64748b;
+  --fel-field-bg: #eef2ff;
+  --fel-field-border: #818cf8;
+  --fel-field-color: #4338ca;
+  --fel-field-active-bg: #6366f1;
+  --fel-field-active-color: #ffffff;
+  --fel-hint-active-bg: #e0e7ff;
+  --fel-match-bg: #fef9c3;
+  --fel-radius: 8px;
+}

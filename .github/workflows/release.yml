@@ -1,0 +1,116 @@
+name: Release
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'packages/formula-edit-lark/package.json'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (check only, do not create tag/release)'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-formula-edit-lark
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Read package version
+        id: pkg
+        run: |
+          VERSION=$(node -p "require('./packages/formula-edit-lark/package.json').version")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Skip if version unchanged on push
+        id: bump
+        if: github.event_name == 'push'
+        run: |
+          if git rev-parse HEAD~1 >/dev/null 2>&1; then
+            PREV=$(git show HEAD~1:packages/formula-edit-lark/package.json | node -p "JSON.parse(require('fs').readFileSync(0,'utf8')).version")
+            CUR="${{ steps.pkg.outputs.version }}"
+            if [ "$PREV" = "$CUR" ]; then
+              echo "skip=true" >> "$GITHUB_OUTPUT"
+              echo "Version unchanged ($CUR), skipping release."
+            fi
+          fi
+
+      - name: Check tag and release state
+        id: state
+        if: steps.bump.outputs.skip != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${{ steps.pkg.outputs.tag }}"
+          git fetch --tags --force
+
+          TAG_EXISTS=false
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            TAG_EXISTS=true
+          fi
+
+          RELEASE_EXISTS=false
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            RELEASE_EXISTS=true
+          fi
+
+          echo "tag_exists=$TAG_EXISTS" >> "$GITHUB_OUTPUT"
+          echo "release_exists=$RELEASE_EXISTS" >> "$GITHUB_OUTPUT"
+
+          if [ "$RELEASE_EXISTS" = true ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "Release $TAG already exists, skipping."
+          fi
+
+      - name: Dry run summary
+        if: >-
+          inputs.dry_run == true &&
+          steps.bump.outputs.skip != 'true' &&
+          steps.state.outputs.skip != 'true'
+        run: |
+          echo "Would create GitHub Release:"
+          echo "  tag: ${{ steps.pkg.outputs.tag }}"
+          echo "  version: ${{ steps.pkg.outputs.version }}"
+          echo "  tag_exists: ${{ steps.state.outputs.tag_exists }}"
+
+      - name: Create GitHub Release
+        if: >-
+          inputs.dry_run != true &&
+          steps.bump.outputs.skip != 'true' &&
+          steps.state.outputs.skip != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${{ steps.pkg.outputs.tag }}"
+          TITLE="formula-edit-lark ${{ steps.pkg.outputs.version }}"
+
+          if [ "${{ steps.state.outputs.tag_exists }}" = true ]; then
+            gh release create "$TAG" \
+              --title "$TITLE" \
+              --generate-notes \
+              --target "${{ github.sha }}"
+          else
+            gh release create "$TAG" \
+              --title "$TITLE" \
+              --generate-notes \
+              --target "${{ github.sha }}"
+          fi

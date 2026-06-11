@@ -15,12 +15,19 @@
     "build": "npm run build -w formula-edit-lark && npm run build -w formula-edit-lark-example",
     "build:vercel": "npm run build -w formula-edit-lark-example",
     "build:lib": "npm run build -w formula-edit-lark",
-    "preview": "npm run preview -w formula-edit-lark-example"
+    "preview": "npm run preview -w formula-edit-lark-example",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "ci": "npm run test && npm run build",
+    "version:patch": "npm version patch --no-git-tag-version -w formula-edit-lark",
+    "version:minor": "npm version minor --no-git-tag-version -w formula-edit-lark",
+    "version:major": "npm version major --no-git-tag-version -w formula-edit-lark"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.4",
     "typescript": "~5.6.2",
-    "vite": "^5.4.11"
+    "vite": "^5.4.11",
+    "vitest": "^3.0.5"
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "4.61.1",

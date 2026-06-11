@@ -1,18 +1,36 @@
 # formula-edit-lark
 
-> React 计算公式编辑器，飞书风格底部提示面板
+React formula editor with Lark-style hint panel and field pills.
 
-See [README.md](../../README.md) for full documentation.
+## Styling
 
-## Build
+This package uses **Tailwind CSS v4 source injection** — no bundled CSS file.
 
-```bash
-npm run build
+In your app entry CSS:
+
+```css
+@import 'tailwindcss';
+@source '../node_modules/formula-edit-lark/dist';
 ```
 
-Outputs to `dist/`:
+## Build outputs
 
 - `formula-edit-lark.js` (ESM)
 - `formula-edit-lark.cjs` (CJS)
-- `formula-edit-lark.css`
-- `index.d.ts`
+- Type declarations
+
+## Source layout
+
+```
+src/
+  core/          # codec, syntax, segments, hint logic, tables
+  ui/
+    editor/      # EditLark, EditorInput, HighlightContent
+    hint/        # HintPanel
+    preview/     # ReadonlyPreview, CellHoverPreview
+    popup/       # CellPopup
+    icons/       # FieldTypeIcon (inline SVG)
+  i18n/
+  types.ts
+  index.ts
+```

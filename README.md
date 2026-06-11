@@ -1,146 +1,217 @@
 # formula-edit-lark
 
-React 计算公式编辑器，兼容 [tntd/formula-editor](https://github.com/tntd/formula-editor) 的 `@字段` / 函数语法，扩展飞书（Lark）风格底部双栏提示面板。
+React formula editor with Lark-style hint panel and field pills. See [中文文档](./README.zh-CN.md).
 
-## 安装
+## Features
+
+- Field pill highlighting via CodeMirror 6 replace widgets
+- Bracket matching aligned with document positions
+- Atomic field tokens (arrow keys skip whole `{{field}}`; focused pill solid highlight)
+- Smart autocomplete with `{{` triggers and bare-letter function names; Tab to insert
+- **CellPopup** / **CellHoverPreview**: editor anchored to or hovering over a table cell
+- Multi-table field refs (`table.column` pills)
+- i18n: `zh-CN` / `en-US` + custom messages
+- Syntax: `{{field}}` mustache tokens (built-in preset) + bare-letter functions
+- Theme via CSS variables + `classNames` (Tailwind v4 source injection, no bundled CSS)
+- 40+ Excel-style functions in the demo
+
+## Install
 
 ```bash
-npm install formula-edit-lark
-# 或
-yarn add formula-edit-lark
+npm install formula-edit-lark tailwindcss
 ```
 
-## 快速开始
+## Quick start
+
+Enable Tailwind source scanning for the library in your app CSS:
+
+```css
+@import 'tailwindcss';
+@source '../node_modules/formula-edit-lark/dist';
+```
+
+When aliasing to source during development, use `@source '../node_modules/formula-edit-lark/src'`.
 
 ```tsx
 import { useMemo, useState } from 'react';
-import {
-  FormulaEdit,
-  columnsToFieldList,
-  type MethodItem,
-} from 'formula-edit-lark';
-import 'formula-edit-lark/style.css';
-
-const tableColumns = [
-  { title: '单价', field: 'price', type: '数字' },
-  { title: '数量', field: 'num', type: '数字' },
-];
-
-const methodList: MethodItem[] = [
-  {
-    name: 'ROUND',
-    value: 'ROUND(,2)',
-    realValue: 'round',
-    category: '数学函数',
-    syntax: 'ROUND(number, [digits])',
-    description: '将数字四舍五入到指定小数位',
-  },
-];
+import { EditLark, columnsToFieldList } from 'formula-edit-lark';
 
 export function Demo() {
-  const [formula, setFormula] = useState('ROUND(@price*@num,2)');
-  const fieldList = useMemo(() => columnsToFieldList(tableColumns), []);
+  const [formula, setFormula] = useState('ROUND({{main.price}}*{{main.num}},2)');
+  const fieldList = useMemo(() => columnsToFieldList(columns), []);
 
   return (
-    <FormulaEdit
+    <EditLark
       value={formula}
       fieldList={fieldList}
       methodList={methodList}
-      onChange={(enCode) => setFormula(enCode)}
-      onConfirm={(enCode) => console.log('confirmed', enCode)}
+      syntax="mustache"
+      locale="en-US"
+      highlight
+      onChange={(enCode, { cnCode }) => {
+        setFormula(enCode);
+        console.log(cnCode);
+      }}
+      onConfirm={(enCode) => console.log(enCode)}
     />
   );
 }
 ```
 
+`value` / `onChange` / `onConfirm` use **enCode** (storage). The editor renders **cnCode** (localized display labels) internally.
+
+## Cell popup (CellPopup)
+
+Click a formula cell to open an editor below it: field pills, live preview (`= 5.375`), and confirm. See `example/src/FormulaCellTable.tsx`.
+
+## Multi-table refs
+
+Pass `tables`; fields on the current table show column titles only; cross-table fields render as `table.column` pills.
+
+```tsx
+import {
+  EditLark,
+  tablesToFieldList,
+  resolveForEvaluation,
+  type TableSource,
+  type EvaluateContext,
+} from 'formula-edit-lark';
+
+const tables: TableSource[] = [
+  {
+    id: 'main',
+    name: 'Main',
+    columns: [
+      { title: 'Unit price', field: 'price', type: 'Number' },
+      { title: 'Qty', field: 'num', type: 'Number' },
+    ],
+    rows: [{ id: 1, price: 80, num: 3 }],
+  },
+  {
+    id: 'stock',
+    name: 'Inventory',
+    columns: [{ title: 'Stock qty', field: 'stock', type: 'Number' }],
+    rows: [{ id: 1, stock: 100 }],
+  },
+];
+
+const fieldList = tablesToFieldList(tables, { currentTableId: 'main' });
+
+<EditLark
+  fieldList={fieldList}
+  tables={tables}
+  currentTableId="main"
+  syntax="mustache"
+  methodList={methodList}
+/>;
+```
+
+| Ref type | Display (cnCode) | Storage (enCode) |
+|----------|------------------|------------------|
+| Current-table field | `{{Unit price}}` | `{{main.price}}` |
+| Cross-table field | `{{Inventory.Stock qty}}` | `{{stock.stock}}` |
+| Table only | `{{Inventory}}` | `{{stock}}` |
+
+Table/column **ids** (`main`, `stock`, `price`) are stable; **names** (`Inventory`, `Unit price`) follow locale.
+
+## Syntax
+
+Built-in preset:
+
+| Preset | Fields | Functions | Notes |
+|--------|--------|-----------|-------|
+| `mustache` (default) | `{{Price}}` | `IF(...)`, `ROUND(...)` | Double-brace fields, bare function names |
+
+Storage uses `{{table.field}}` / `{{table}}` for fields; functions stay as bare names (e.g. `IF(...)`), not `#if`. Legacy `@field` and `#func` enCode still decode for compatibility.
+
+You may pass a custom `EditorSyntax` object for other trigger patterns.
+
+## Evaluation
+
+```tsx
+import { resolveForEvaluation } from 'formula-edit-lark';
+
+const executable = resolveForEvaluation(enCode, fieldList, methodList, evaluateContext);
+// e.g. IF('2026-01-15'>'2020-01-01', 'Jan', 100) → run with formulajs / your engine
+```
+
+## i18n
+
+```tsx
+<EditLark locale="en-US" />
+<EditLark locale="zh-CN" messages={{ confirm: '应用' }} />
+```
+
+## Theme
+
+```tsx
+<EditLark
+  theme={{
+    '--fel-primary': '#6366f1',
+    '--fel-field-bg': '#eef2ff',
+    '--fel-field-border': '#818cf8',
+    '--fel-field-active-bg': '#6366f1',
+    '--fel-field-active-color': '#ffffff',
+  }}
+/>
+```
+
 ## API
 
-### 组件
+### Components
 
-| 导出 | 说明 |
-|------|------|
-| `FormulaEdit` / `FormulaEditLark` | 主编辑器组件 |
-| `HintPanel` | 底部提示面板（可单独使用） |
+| Export | Description |
+|--------|-------------|
+| `EditLark` | Main editor |
+| `CellPopup` | Cell-anchored popup editor |
+| `CellHoverPreview` | Hover tooltip showing formula |
+| `HintPanel` | Hint panel (standalone) |
+| `ReadonlyPreview` | Read-only highlighted formula |
+| `HighlightContent` | Pill renderer for custom layouts |
 
-### 工具函数
+### Utilities
 
-| 函数 | 说明 |
-|------|------|
-| `columnsToFieldList` | 表头列 → `fieldList` |
-| `cnCodeToEn` | 展示态 → 存储态 |
-| `enCodeToCn` | 存储态 → 展示态 |
-| `toExecutableExpression` | 转为可执行表达式 |
-| `getTriggerContext` | 检测光标处 @字段 / 函数输入 |
-| `filterHintItems` | 过滤提示项 |
+| Function | Description |
+|----------|-------------|
+| `columnsToFieldList` | Single-table columns → `fieldList` |
+| `tablesToFieldList` | Multi-table → `fieldList` |
+| `resolveForEvaluation` | enCode + context → executable expression |
+| `cnCodeToEn` / `enCodeToCn` | Display ↔ storage codec |
+| `getTriggerContext` | Cursor trigger detection |
 
 ### Props
 
 ```tsx
-type FormulaEditLarkProps = {
-  value?: string;
+type EditLarkProps = {
+  value?: string; // enCode
   fieldList: FieldItem[];
   methodList: MethodItem[];
-  placeholder?: string;
+  tables?: TableSource[];
+  currentTableId?: string;
+  syntax?: EditorSyntax | 'mustache';
+  locale?: 'zh-CN' | 'en-US' | Partial<LocaleMessages>;
+  theme?: EditTheme;
+  classNames?: EditClassNames;
+  highlight?: boolean;
+  renderFieldIcon?: FieldIconRenderer;
+  renderTableIcon?: TableIconRenderer;
+  mode?: 'default' | 'cell';
   onChange?: (enCode: string, payload: { cnCode: string; enCode: string }) => void;
   onConfirm?: (enCode: string, payload: { cnCode: string; enCode: string }) => void;
 };
 ```
 
-### Ref
-
-```tsx
-type FormulaEditLarkRef = {
-  insertValue: (text: string) => void;
-  getCnCode: () => string;
-  getEnCode: () => string;
-};
-```
-
-## 功能
-
-- 输入 `@` 引用字段，自动过滤、Tab 补全
-- 直接输入字母（如 `A`）引用函数，联动底部提示
-- 底部左侧：字段 / 函数列表；右侧：语法、说明、示例
-- 兼容 tntd 的 cnCode / enCode 编解码
-
-## 本地开发
+## Local development
 
 ```bash
-# 安装依赖
 npm install
-
-# 构建库 + 启动 demo
 npm run dev
-
-# 仅构建库
-npm run build:lib
+npm test          # unit tests
+npm run ci        # test + build (same as GitHub Actions)
+npm run version:patch   # bump library version (CI auto-tags + Release)
 ```
 
-## 部署到 Vercel
-
-项目根目录已包含 `vercel.json`，将 `example/` 构建为静态站点发布。
-
-1. 在 [Vercel](https://vercel.com) 导入本仓库
-2. **Root Directory** 保持为仓库根目录（`.`）
-3. Vercel 会自动读取配置：
-   - **Install Command**: `npm ci --include=dev --include=optional`
-   - **Build Command**: `npm run build:vercel`（仅构建 demo，库源码通过 alias 直接打包）
-   - **Output Directory**: `example/dist`
-   - **Node.js 版本**: `20.x`（通过 `.nvmrc` 固定）
-
-也可使用 CLI：
-
-```bash
-npm i -g vercel
-vercel
-```
-
-## 目录结构
-
-```
-packages/formula-edit-lark/   # 可发布的 React UI 库
-example/                      # 接入示例（含公式计算预览）
-```
+Release flow: `npm run version:patch` → commit → push `main` → auto `vX.Y.Z` tag + GitHub Release → npm publish. See [PUBLISHING.md](./PUBLISHING.md).
 
 ## License
 
