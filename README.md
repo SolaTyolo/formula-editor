@@ -123,10 +123,10 @@ npm run build:lib
 1. 在 [Vercel](https://vercel.com) 导入本仓库
 2. **Root Directory** 保持为仓库根目录（`.`）
 3. Vercel 会自动读取配置：
-   - **Install Command**: `npm install --include=dev --include=optional`
-   - **Build Command**: `npm run build`（先构建 `formula-edit-lark` 库，再构建 demo）
+   - **Install Command**: `npm ci --include=dev --include=optional`
+   - **Build Command**: `npm run build:vercel`（仅构建 demo，库源码通过 alias 直接打包）
    - **Output Directory**: `example/dist`
-   - **Node.js 版本**: `20.x`（通过 `.nvmrc` 固定，避免 Node 24 与 Rollup 不兼容）
+   - **Node.js 版本**: `20.x`（通过 `.nvmrc` 固定）
 
 也可使用 CLI：
 

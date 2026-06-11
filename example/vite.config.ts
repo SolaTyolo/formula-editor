@@ -10,15 +10,8 @@ export default defineConfig({
     global: 'globalThis',
   },
   resolve: {
-    alias: [
-      {
-        find: 'formula-edit-lark/style.css',
-        replacement: resolve(libRoot, 'dist/formula-edit-lark.css'),
-      },
-      {
-        find: 'formula-edit-lark',
-        replacement: resolve(libRoot, 'src/index.ts'),
-      },
-    ],
+    alias: {
+      'formula-edit-lark': resolve(libRoot, 'src/index.ts'),
+    },
   },
 });

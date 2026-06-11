@@ -7,7 +7,6 @@ import {
   type MethodItem,
   type TableColumn,
 } from 'formula-edit-lark';
-import 'formula-edit-lark/style.css';
 import { evaluateFormula } from './formulaEngine';
 import './App.css';
 
