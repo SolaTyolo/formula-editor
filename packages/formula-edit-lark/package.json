@@ -1,0 +1,48 @@
+{
+  "name": "formula-edit-lark",
+  "version": "0.1.0",
+  "description": "React formula editor with Lark-style hint panel, compatible with @tntd/formula-edit syntax",
+  "keywords": [
+    "formula",
+    "formula-edit",
+    "formula-edit-react",
+    "lark",
+    "feishu"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/formula-edit-lark.cjs",
+  "module": "./dist/formula-edit-lark.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/formula-edit-lark.js",
+      "require": "./dist/formula-edit-lark.cjs"
+    },
+    "./style.css": "./dist/formula-edit-lark.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "scripts": {
+    "build": "vite build && tsc -p tsconfig.build.json",
+    "dev": "vite build --watch"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "~5.6.2",
+    "vite": "^5.4.11"
+  }
+}

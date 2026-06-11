@@ -1,0 +1,58 @@
+.formula-edit-lark {
+  border: 1px solid #d0d3d6;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(31, 35, 41, 0.08);
+}
+
+.formula-edit-lark__editor {
+  padding: 12px 12px 0;
+}
+
+.formula-edit-lark__textarea {
+  width: 100%;
+  min-height: 96px;
+  border: none;
+  resize: vertical;
+  outline: none;
+  font-size: 14px;
+  line-height: 1.7;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  color: #1f2329;
+  box-sizing: border-box;
+}
+
+.formula-edit-lark__textarea::placeholder {
+  color: #bbbfc4;
+}
+
+.formula-edit-lark__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-top: 1px solid #e5e6eb;
+  border-bottom: 1px solid #e5e6eb;
+  background: #fff;
+}
+
+.formula-edit-lark__equal {
+  font-size: 18px;
+  color: #8f959e;
+  font-weight: 600;
+}
+
+.formula-edit-lark__confirm {
+  border: none;
+  background: #1456f0;
+  color: #fff;
+  padding: 6px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.formula-edit-lark__confirm:hover {
+  background: #0f47cc;
+}
