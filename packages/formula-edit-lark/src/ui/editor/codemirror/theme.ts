@@ -22,10 +22,15 @@ export function formulaEditorTheme(compact?: boolean, classNames?: EditClassName
       '.cm-content': {
         padding: 0,
         minHeight,
+        color: 'var(--fel-text, #1f2329)',
         caretColor: 'var(--fel-text, #1f2329)',
       },
       '.cm-line': {
         padding: 0,
+        color: 'inherit',
+      },
+      '.cm-placeholder': {
+        color: 'var(--fel-muted, #8f959e)',
       },
       '.cm-cursor, .cm-dropCursor': {
         borderLeftColor: 'var(--fel-text, #1f2329)',
@@ -65,8 +70,6 @@ export function formulaEditorTheme(compact?: boolean, classNames?: EditClassName
   );
 }
 
-export function editorRootClassName(compact?: boolean, classNames?: EditClassNames) {
-  return ['fel-cm-editor', compact && 'fel-cm-editor--compact', classNames?.editorInput]
-    .filter(Boolean)
-    .join(' ');
+export function editorRootClassName(_compact?: boolean, classNames?: EditClassNames) {
+  return ['fel-CmEditor', classNames?.editorInput].filter(Boolean).join(' ');
 }

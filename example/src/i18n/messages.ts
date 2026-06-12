@@ -48,6 +48,23 @@ export type AppMessages = {
   currentTablePanel: string;
   currentTableBadge: string;
   linkedTablePanel: string;
+  themeShowcasePanel: string;
+  themeShowcaseHint: string;
+  themeSwitchLabel: string;
+  themeTokensLabel: string;
+  themeDefaultTokens: string;
+  themeMinimal: string;
+  themeMinimalDesc: string;
+  themeDefault: string;
+  themeDefaultDesc: string;
+  themeIndigo: string;
+  themeIndigoDesc: string;
+  themeRose: string;
+  themeRoseDesc: string;
+  themeOcean: string;
+  themeOceanDesc: string;
+  themeDark: string;
+  themeDarkDesc: string;
 };
 
 export const APP_LOCALES: Record<AppLocale, AppMessages> = {
@@ -98,6 +115,23 @@ export const APP_LOCALES: Record<AppLocale, AppMessages> = {
     currentTablePanel: '本表（当前编辑表）',
     currentTableBadge: '当前',
     linkedTablePanel: '关联表（可跨表引用字段）',
+    themeShowcasePanel: '主题样式示例',
+    themeShowcaseHint: '通过 `theme`（CSS 变量）与 `classNames`（BEM 类名）自定义外观。',
+    themeSwitchLabel: '切换主题',
+    themeTokensLabel: 'theme 变量',
+    themeDefaultTokens: '未传 theme，使用库内置默认绿色主题。',
+    themeMinimal: '极简无边框',
+    themeMinimalDesc: '透明背景、无外框与阴影，适合嵌入已有表单或表格单元格。',
+    themeDefault: '默认绿色',
+    themeDefaultDesc: '库内置默认配色，无需传 theme。',
+    themeIndigo: '靛蓝',
+    themeIndigoDesc: 'theme prop 覆盖主色与字段 pill 色。',
+    themeRose: '玫瑰暖色',
+    themeRoseDesc: '粉色调 pill + 珊瑚色确认按钮。',
+    themeOcean: '海洋青',
+    themeOceanDesc: '青绿色系，适合数据/财务场景。',
+    themeDark: '暗色',
+    themeDarkDesc: '深色背景 + classNames 微调提示面板边框。',
   },
   'en-US': {
     title: 'Formula Editor · Lark-style hint panel',
@@ -146,6 +180,23 @@ export const APP_LOCALES: Record<AppLocale, AppMessages> = {
     currentTablePanel: 'Current table (editing)',
     currentTableBadge: 'Current',
     linkedTablePanel: 'Linked table (cross-table field refs)',
+    themeShowcasePanel: 'Theme presets',
+    themeShowcaseHint: 'Customize via `theme` (CSS variables) and `classNames` (BEM).',
+    themeSwitchLabel: 'Switch theme',
+    themeTokensLabel: 'theme tokens',
+    themeDefaultTokens: 'No theme prop — library default green palette.',
+    themeMinimal: 'Minimal borderless',
+    themeMinimalDesc: 'Transparent chrome, no outer border or shadow — fits inline in forms or cells.',
+    themeDefault: 'Default green',
+    themeDefaultDesc: 'Built-in palette, no theme prop needed.',
+    themeIndigo: 'Indigo',
+    themeIndigoDesc: 'Primary and field pill colors via theme prop.',
+    themeRose: 'Rose warm',
+    themeRoseDesc: 'Pink pills with coral confirm button.',
+    themeOcean: 'Ocean teal',
+    themeOceanDesc: 'Teal palette for data/finance UIs.',
+    themeDark: 'Dark',
+    themeDarkDesc: 'Dark surface; classNames tweak hint panel borders.',
   },
 };
 

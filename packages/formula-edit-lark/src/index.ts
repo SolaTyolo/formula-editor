@@ -1,3 +1,5 @@
+import './style/formula-edit-lark.css';
+
 export {
   EditLark,
   type EditLarkRef,

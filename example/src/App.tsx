@@ -12,7 +12,8 @@ import {
   getTableColumns,
   useAppLocale,
 } from './i18n';
-import { EDIT_THEME } from './editorTheme';
+import { editorWrapClass, PRESET_LABEL_KEYS, ThemeSwitcher } from './ThemeSwitcher';
+import { THEME_PRESETS, type ThemePresetId } from './editorTheme';
 import './editorTheme.css';
 import './App.css';
 
@@ -24,6 +25,13 @@ export default function App() {
   const [formula, setFormula] = useState(DEFAULT_ROW_FORMULA);
   const [confirmed, setConfirmed] = useState(DEFAULT_ROW_FORMULA);
   const [cnFormula, setCnFormula] = useState('');
+  const [themeId, setThemeId] = useState<ThemePresetId>('indigo');
+
+  const activePreset = useMemo(
+    () => THEME_PRESETS.find((p) => p.id === themeId) ?? THEME_PRESETS[2],
+    [themeId],
+  );
+  const themeLabels = PRESET_LABEL_KEYS[activePreset.id];
 
   const tableColumns = useMemo(() => getTableColumns(messages), [messages]);
   const sampleRows = useMemo(() => getSampleRows(messages), [messages]);
@@ -57,31 +65,41 @@ export default function App() {
       </section>
 
       <section className="layout">
-        <div className="panel">
-          <h2>{messages.editorPanel}</h2>
-          <EditLark
-            ref={editorRef}
-            value={formula}
-            fieldList={fieldList}
-            methodList={methodList}
-            tables={tableSources}
-            currentTableId={MAIN_TABLE_ID}
-            syntax="mustache"
-            locale={locale}
-            highlight
-            theme={EDIT_THEME}
-            classNames={{
-              confirm: 'rounded-lg px-4 py-1.5',
-            }}
-            onChange={(enCode, payload) => {
-              setFormula(enCode);
-              setCnFormula(payload.cnCode);
-            }}
-            onConfirm={(enCode, payload) => {
-              setConfirmed(enCode);
-              setCnFormula(payload.cnCode);
-            }}
-          />
+        <div className="panel editor-panel">
+          <div className="editor-panel__header">
+            <div>
+              <h2>{messages.editorPanel}</h2>
+              <p className="hint">{messages.themeShowcaseHint}</p>
+            </div>
+            <ThemeSwitcher value={themeId} onChange={setThemeId} messages={messages} />
+          </div>
+
+          <p className="editor-panel__themeDesc">{messages[themeLabels.desc]}</p>
+
+          <div className={editorWrapClass(themeId)}>
+            <EditLark
+              ref={editorRef}
+              value={formula}
+              fieldList={fieldList}
+              methodList={methodList}
+              tables={tableSources}
+              currentTableId={MAIN_TABLE_ID}
+              syntax="mustache"
+              locale={locale}
+              highlight
+              theme={activePreset.theme}
+              classNames={activePreset.classNames}
+              onChange={(enCode, payload) => {
+                setFormula(enCode);
+                setCnFormula(payload.cnCode);
+              }}
+              onConfirm={(enCode, payload) => {
+                setConfirmed(enCode);
+                setCnFormula(payload.cnCode);
+              }}
+            />
+          </div>
+
           <div className="formula-meta">
             <div>
               <span>{messages.cnCodeLabel}</span>
@@ -96,6 +114,18 @@ export default function App() {
               <code>{confirmed}</code>
             </div>
           </div>
+
+          {activePreset.theme ? (
+            <details className="editor-panel__tokens">
+              <summary>{messages.themeTokensLabel}</summary>
+              <pre>{JSON.stringify(activePreset.theme, null, 2)}</pre>
+            </details>
+          ) : (
+            <p className="editor-panel__tokens editor-panel__tokens--empty">
+              {messages.themeDefaultTokens}
+            </p>
+          )}
+
           <p className="hint">
             {formatAppMessage(messages.methodCountHint, { count: methodList.length })}
           </p>

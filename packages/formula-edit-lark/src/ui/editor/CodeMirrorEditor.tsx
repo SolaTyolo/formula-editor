@@ -16,7 +16,7 @@ import type {
   TableRefItem,
 } from '../../types';
 import { cn } from '../cn';
-import { inputWrapClasses } from '../classes';
+import { inputWrapClasses, inputWrapCompactClasses } from '../classes';
 import type { FormulaEditorContext } from './codemirror/context';
 import { atomicRangesExtension, fieldPillsExtension } from './codemirror/field-pills';
 import { createInteractionExtensions, type FormulaEditorInteraction } from './codemirror/interaction';
@@ -153,7 +153,7 @@ export const CodeMirrorEditor = forwardRef<CodeMirrorEditorHandle, Props>(
 
     return (
       <div
-        className={cn('fel-input-wrap', inputWrapClasses, compact && 'min-h-14', classNames?.editorInput)}
+        className={cn(inputWrapClasses, compact && inputWrapCompactClasses, classNames?.editorInput)}
       >
         <div ref={containerRef} className={editorRootClassName(compact, classNames)} />
       </div>

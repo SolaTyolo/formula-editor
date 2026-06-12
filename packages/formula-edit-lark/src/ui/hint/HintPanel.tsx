@@ -33,6 +33,7 @@ import {
   hintItemNameClasses,
   hintItemTabClasses,
   hintItemCurrentBadgeClasses,
+  hintItemMetaClasses,
   hintItemTableNameClasses,
   hintLabelClasses,
   hintListClasses,
@@ -380,7 +381,7 @@ export function HintPanel({
                       const showTab = index === activeIndex;
                       if (!showCurrentBadge && !showTab) return null;
                       return (
-                        <span className="ml-auto flex items-center gap-1">
+                        <span className={hintItemMetaClasses}>
                           {showCurrentBadge ? (
                             <span className={hintItemCurrentBadgeClasses}>
                               {messages.currentTableBadge}

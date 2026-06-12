@@ -153,7 +153,7 @@ export type EditTheme = {
   '--fel-font-mono'?: string;
 };
 
-/** Per-region className overrides (Tailwind-friendly) */
+/** Per-region className overrides */
 export type EditClassNames = {
   root?: string;
   editor?: string;

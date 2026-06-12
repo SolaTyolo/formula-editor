@@ -4,28 +4,49 @@ React formula editor with Lark-style hint panel and field pills.
 
 ## Styling
 
-This package uses **Tailwind CSS v4 source injection** — no bundled CSS file.
+This package ships **built-in CSS** (amis-style: BEM class names + CSS variables). Styles load automatically when you import components:
 
-In your app entry CSS:
+```tsx
+import { EditLark } from 'formula-edit-lark';
+```
 
-```css
-@import 'tailwindcss';
-@source '../node_modules/formula-edit-lark/dist';
+Or import the stylesheet explicitly:
+
+```tsx
+import 'formula-edit-lark/style.css';
+```
+
+### Theme tokens
+
+Override CSS variables via the `theme` prop (inline on the editor root), or wrap with a custom class:
+
+```tsx
+<EditLark theme={{ '--fel-primary': '#6366f1' }} />
+```
+
+### Region classNames
+
+Pass extra classes per region (similar to amis `className` / `variableClassName`):
+
+```tsx
+<EditLark classNames={{ hintPanel: 'my-hint-panel' }} />
 ```
 
 ## Build outputs
 
 - `formula-edit-lark.js` (ESM)
 - `formula-edit-lark.cjs` (CJS)
+- `formula-edit-lark.css` (styles)
 - Type declarations
 
 ## Source layout
 
 ```
 src/
+  style/         # formula-edit-lark.css (BEM + CSS variables)
   core/          # codec, syntax, segments, hint logic, tables
   ui/
-    editor/      # EditLark, EditorInput, HighlightContent
+    editor/      # EditLark, CodeMirrorEditor, HighlightContent
     hint/        # HintPanel
     preview/     # ReadonlyPreview, CellHoverPreview
     popup/       # CellPopup

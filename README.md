@@ -12,25 +12,28 @@ React formula editor with Lark-style hint panel and field pills. See [中文文�
 - Multi-table field refs (`table.column` pills)
 - i18n: `zh-CN` / `en-US` + custom messages
 - Syntax: `{{field}}` mustache tokens (built-in preset) + bare-letter functions
-- Theme via CSS variables + `classNames` (Tailwind v4 source injection, no bundled CSS)
+- Theme via bundled CSS (BEM + CSS variables), `theme` prop, and `classNames` overrides
 - 40+ Excel-style functions in the demo
 
 ## Install
 
 ```bash
-npm install formula-edit-lark tailwindcss
+npm install formula-edit-lark
 ```
 
 ## Quick start
 
-Enable Tailwind source scanning for the library in your app CSS:
+Import the editor — default styles are included automatically:
 
-```css
-@import 'tailwindcss';
-@source '../node_modules/formula-edit-lark/dist';
+```tsx
+import { EditLark } from 'formula-edit-lark';
 ```
 
-When aliasing to source during development, use `@source '../node_modules/formula-edit-lark/src'`.
+Or load styles explicitly:
+
+```tsx
+import 'formula-edit-lark/style.css';
+```
 
 ```tsx
 import { useMemo, useState } from 'react';
@@ -144,6 +147,8 @@ const executable = resolveForEvaluation(enCode, fieldList, methodList, evaluateC
 
 ## Theme
 
+Styles follow the amis **InputFormula** pattern: BEM classes (`.fel-*`) with CSS custom properties on the root.
+
 ```tsx
 <EditLark
   theme={{
@@ -153,8 +158,11 @@ const executable = resolveForEvaluation(enCode, fieldList, methodList, evaluateC
     '--fel-field-active-bg': '#6366f1',
     '--fel-field-active-color': '#ffffff',
   }}
+  classNames={{ hintPanel: 'my-hint-panel' }}
 />
 ```
+
+For portals or previews without a root `theme` prop, wrap with a class that sets the same variables (see `example/src/editorTheme.css`).
 
 ## API
 

@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import type { AnchorRect, CellPopupClassNames } from '../../types';
 import { EditLark, type EditLarkProps } from '../editor/Editor';
 import { cn } from '../cn';
-import { popupBackdropClasses, popupClasses } from '../classes';
+import { popupBackdropClasses, popupClasses, rootPopupClasses } from '../classes';
 
 export type CellPopupProps = Omit<EditLarkProps, 'mode' | 'classNames'> & {
   open: boolean;
@@ -69,11 +69,7 @@ export function CellPopup({
       <div className={cn(popupBackdropClasses, classNames?.backdrop)} aria-hidden />
       <div
         ref={popupRef}
-        className={cn(
-          popupClasses,
-          expanded && '[&_.fel-input-wrap]:min-h-40',
-          classNames?.popup,
-        )}
+        className={cn(popupClasses, expanded && 'is-expanded', classNames?.popup)}
         style={popupStyle}
         role="dialog"
         aria-modal="true"
@@ -86,7 +82,7 @@ export function CellPopup({
           onExpandClick={() => onExpandedChange?.(!expanded)}
           classNames={{
             ...classNames,
-            root: cn('shadow-[0_8px_24px_rgba(31,35,41,0.16)]', classNames?.root),
+            root: cn(rootPopupClasses, classNames?.root),
           }}
           onConfirm={(enCode, payload) => {
             onConfirm?.(enCode, payload);

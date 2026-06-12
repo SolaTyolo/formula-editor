@@ -44,7 +44,6 @@ import type { FieldIconRenderer, TableIconRenderer } from '../icons/FieldTypeIco
 import { cn } from '../cn';
 import {
   confirmClasses,
-  editorCellClasses,
   editorClasses,
   equalClasses,
   expandClasses,
@@ -362,7 +361,7 @@ export const EditLark = forwardRef<EditLarkRef, EditLarkProps>(
         className={cn(rootClasses, isCellMode && rootCellClasses, className, classNames?.root)}
         style={rootStyle}
       >
-        <div className={cn(editorClasses, isCellMode && editorCellClasses, classNames?.editor)}>
+        <div className={cn(editorClasses, classNames?.editor)}>
           <CodeMirrorEditor
             ref={editorRef}
             value={cnCode}
